@@ -22,6 +22,7 @@ class _MultiFeatureAppState extends State<MultiFeatureApp>
     with SingleTickerProviderStateMixin {
   double _duration = 1.0; // Duration in seconds
   Curve _curve = Curves.easeIn;
+  bool _isTextAnimation = false;
   bool _isImageRounded = false;
   bool _isImageFaded = true;
   AnimationController? _rotationController;
@@ -98,13 +99,21 @@ class _MultiFeatureAppState extends State<MultiFeatureApp>
               ],
             ),
             AnimatedOpacity(
-              opacity: 1.0,
+              opacity: !_isTextAnimation ? 1.0 : 0.0,
               duration: Duration(seconds: _duration.toInt()),
               curve: _curve,
               child: Text(
                 'Hello, Flutter!',
                 style: TextStyle(fontSize: 24),
               ),
+            ),
+            FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  _isTextAnimation = !_isTextAnimation;
+                });
+              },
+              child: Icon(Icons.play_arrow),
             ),
             SwitchListTile(
               title: Text("Toggle Rounded Corners on Image"),
