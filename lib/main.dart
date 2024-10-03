@@ -8,22 +8,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: FadingTextAnimation(),
+      home: TextAnimationControl(),
     );
   }
 }
 
-class FadingTextAnimation extends StatefulWidget {
+class TextAnimationControl extends StatefulWidget {
   @override
-  _FadingTextAnimationState createState() => _FadingTextAnimationState();
+  _TextAnimationControlState createState() => _TextAnimationControlState();
 }
 
-class _FadingTextAnimationState extends State<FadingTextAnimation> {
-  bool _isVisible = true;
+class _TextAnimationControlState extends State<TextAnimationControl> {
+  double _duration = 1.0; // Duration in seconds
+  Curve _curve = Curves.easeIn;
 
-  void toggleVisibility() {
+  void _updateDuration(double newDuration) {
     setState(() {
-      _isVisible = !_isVisible;
+      _duration = newDuration;
+    });
+  }
+
+  void _updateCurve(Curve newCurve) {
+    setState(() {
+      _curve = newCurve;
     });
   }
 
@@ -31,21 +38,45 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fading Text Animation'),
+        title: Text('Adjustable Text Animation'),
       ),
-      body: Center(
-        child: AnimatedOpacity(
-          opacity: _isVisible ? 1.0 : 0.0,
-          duration: Duration(seconds: 1),
-          child: Text(
-            'Hello, Flutter!',
-            style: TextStyle(fontSize: 24),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Slider(
+            min: 0.5,
+            max: 5.0,
+            divisions: 9,
+            label: "${_duration.toStringAsFixed(1)} s",
+            value: _duration,
+            onChanged: (double value) {
+              _updateDuration(value);
+            },
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: toggleVisibility,
-        child: Icon(Icons.play_arrow),
+          DropdownButton<Curve>(
+            value: _curve,
+            onChanged: (Curve? newValue) {
+              if (newValue != null) {
+                _updateCurve(newValue);
+              }
+            },
+            items: [
+              DropdownMenuItem(child: Text("Ease In"), value: Curves.easeIn),
+              DropdownMenuItem(child: Text("Ease Out"), value: Curves.easeOut),
+              DropdownMenuItem(child: Text("Linear"), value: Curves.linear),
+              DropdownMenuItem(child: Text("Bounce In"), value: Curves.bounceIn),
+            ],
+          ),
+          AnimatedOpacity(
+            opacity: 1.0,
+            duration: Duration(seconds: _duration.toInt()),
+            curve: _curve,
+            child: Text(
+              'Hello, Flutter!',
+              style: TextStyle(fontSize: 24),
+            ),
+          ),
+        ],
       ),
     );
   }
