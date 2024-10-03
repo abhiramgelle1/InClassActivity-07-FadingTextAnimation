@@ -8,72 +8,47 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: TextAnimationControl(),
+      home: ImageRoundedCorners(),
     );
   }
 }
 
-class TextAnimationControl extends StatefulWidget {
+class ImageRoundedCorners extends StatefulWidget {
   @override
-  _TextAnimationControlState createState() => _TextAnimationControlState();
+  _ImageRoundedCornersState createState() => _ImageRoundedCornersState();
 }
 
-class _TextAnimationControlState extends State<TextAnimationControl> {
-  double _duration = 1.0; // Duration in seconds
-  Curve _curve = Curves.easeIn;
-
-  void _updateDuration(double newDuration) {
-    setState(() {
-      _duration = newDuration;
-    });
-  }
-
-  void _updateCurve(Curve newCurve) {
-    setState(() {
-      _curve = newCurve;
-    });
-  }
+class _ImageRoundedCornersState extends State<ImageRoundedCorners> {
+  bool _isImageRounded = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Adjustable Text Animation'),
+        title: Text('Rounded Corners Image'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Slider(
-            min: 0.5,
-            max: 5.0,
-            divisions: 9,
-            label: "${_duration.toStringAsFixed(1)} s",
-            value: _duration,
-            onChanged: (double value) {
-              _updateDuration(value);
+          SwitchListTile(
+            title: Text("Toggle Rounded Corners on Image"),
+            value: _isImageRounded,
+            onChanged: (bool value) {
+              setState(() {
+                _isImageRounded = value;
+              });
             },
           ),
-          DropdownButton<Curve>(
-            value: _curve,
-            onChanged: (Curve? newValue) {
-              if (newValue != null) {
-                _updateCurve(newValue);
-              }
-            },
-            items: [
-              DropdownMenuItem(child: Text("Ease In"), value: Curves.easeIn),
-              DropdownMenuItem(child: Text("Ease Out"), value: Curves.easeOut),
-              DropdownMenuItem(child: Text("Linear"), value: Curves.linear),
-              DropdownMenuItem(child: Text("Bounce In"), value: Curves.bounceIn),
-            ],
-          ),
-          AnimatedOpacity(
-            opacity: 1.0,
-            duration: Duration(seconds: _duration.toInt()),
-            curve: _curve,
-            child: Text(
-              'Hello, Flutter!',
-              style: TextStyle(fontSize: 24),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            width: 200,
+            height: 300,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage("https://placekitten.com/200/300"),
+                fit: BoxFit.cover,
+              ),
+              borderRadius: BorderRadius.circular(_isImageRounded ? 30.0 : 0.0),
             ),
           ),
         ],
