@@ -130,7 +130,7 @@ class _MultiFeatureAppState extends State<MultiFeatureApp>
               height: 300,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage("https://placekitten.com/200/300"),
+                  image: AssetImage("assets/naruto_image.jpeg"),
                   fit: BoxFit.cover,
                 ),
                 borderRadius:
@@ -149,11 +149,14 @@ class _MultiFeatureAppState extends State<MultiFeatureApp>
             AnimatedOpacity(
               opacity: _isImageFaded ? 1.0 : 0.0,
               duration: Duration(seconds: 2),
-              child: Image.network("https://placekitten.com/200/300"),
+              child: Image.asset("assets/naruto_image.jpeg"),
+            ),
+            SizedBox(
+              height: 10.0,
             ),
             RotationTransition(
               turns: Tween(begin: 0.0, end: 1.0).animate(_rotationController!),
-              child: Image.network("https://placekitten.com/200/300"),
+              child: Image.asset("assets/naruto_image.jpeg"),
             ),
             FloatingActionButton(
               onPressed: toggleImageRotation,
