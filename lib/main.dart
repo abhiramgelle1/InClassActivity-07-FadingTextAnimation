@@ -67,89 +67,93 @@ class _MultiFeatureAppState extends State<MultiFeatureApp>
       appBar: AppBar(
         title: Text('Multiple Animation Features'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Slider(
-            min: 0.5,
-            max: 5.0,
-            divisions: 9,
-            label: "${_duration.toStringAsFixed(1)} s",
-            value: _duration,
-            onChanged: (double value) {
-              _updateDuration(value);
-            },
-          ),
-          DropdownButton<Curve>(
-            value: _curve,
-            onChanged: (Curve? newValue) {
-              if (newValue != null) {
-                _updateCurve(newValue);
-              }
-            },
-            items: [
-              DropdownMenuItem(child: Text("Ease In"), value: Curves.easeIn),
-              DropdownMenuItem(child: Text("Ease Out"), value: Curves.easeOut),
-              DropdownMenuItem(child: Text("Linear"), value: Curves.linear),
-              DropdownMenuItem(
-                  child: Text("Bounce In"), value: Curves.bounceIn),
-            ],
-          ),
-          AnimatedOpacity(
-            opacity: 1.0,
-            duration: Duration(seconds: _duration.toInt()),
-            curve: _curve,
-            child: Text(
-              'Hello, Flutter!',
-              style: TextStyle(fontSize: 24),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Slider(
+              min: 0.5,
+              max: 5.0,
+              divisions: 9,
+              label: "${_duration.toStringAsFixed(1)} s",
+              value: _duration,
+              onChanged: (double value) {
+                _updateDuration(value);
+              },
             ),
-          ),
-          SwitchListTile(
-            title: Text("Toggle Rounded Corners on Image"),
-            value: _isImageRounded,
-            onChanged: (bool value) {
-              setState(() {
-                _isImageRounded = value;
-              });
-            },
-          ),
-          AnimatedContainer(
-            duration: Duration(milliseconds: 300),
-            width: 200,
-            height: 300,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage("https://placekitten.com/200/300"),
-                fit: BoxFit.cover,
+            DropdownButton<Curve>(
+              value: _curve,
+              onChanged: (Curve? newValue) {
+                if (newValue != null) {
+                  _updateCurve(newValue);
+                }
+              },
+              items: [
+                DropdownMenuItem(child: Text("Ease In"), value: Curves.easeIn),
+                DropdownMenuItem(
+                    child: Text("Ease Out"), value: Curves.easeOut),
+                DropdownMenuItem(child: Text("Linear"), value: Curves.linear),
+                DropdownMenuItem(
+                    child: Text("Bounce In"), value: Curves.bounceIn),
+              ],
+            ),
+            AnimatedOpacity(
+              opacity: 1.0,
+              duration: Duration(seconds: _duration.toInt()),
+              curve: _curve,
+              child: Text(
+                'Hello, Flutter!',
+                style: TextStyle(fontSize: 24),
               ),
-              borderRadius: BorderRadius.circular(_isImageRounded ? 30.0 : 0.0),
             ),
-          ),
-          SwitchListTile(
-            title: Text("Toggle Image Fade"),
-            value: _isImageFaded,
-            onChanged: (bool value) {
-              setState(() {
-                _isImageFaded = value;
-              });
-            },
-          ),
-          AnimatedOpacity(
-            opacity: _isImageFaded ? 1.0 : 0.0,
-            duration: Duration(seconds: 2),
-            child: Image.network("https://placekitten.com/200/300"),
-          ),
-          RotationTransition(
-            turns: Tween(begin: 0.0, end: 1.0).animate(_rotationController!),
-            child: Image.network("https://placekitten.com/200/300"),
-          ),
-          FloatingActionButton(
-            onPressed: toggleImageRotation,
-            child: Icon(_rotationController!.isAnimating
-                ? Icons.stop
-                : Icons.rotate_right),
-          ),
-        ],
+            SwitchListTile(
+              title: Text("Toggle Rounded Corners on Image"),
+              value: _isImageRounded,
+              onChanged: (bool value) {
+                setState(() {
+                  _isImageRounded = value;
+                });
+              },
+            ),
+            AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              width: 200,
+              height: 300,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage("https://placekitten.com/200/300"),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius:
+                    BorderRadius.circular(_isImageRounded ? 30.0 : 0.0),
+              ),
+            ),
+            SwitchListTile(
+              title: Text("Toggle Image Fade"),
+              value: _isImageFaded,
+              onChanged: (bool value) {
+                setState(() {
+                  _isImageFaded = value;
+                });
+              },
+            ),
+            AnimatedOpacity(
+              opacity: _isImageFaded ? 1.0 : 0.0,
+              duration: Duration(seconds: 2),
+              child: Image.network("https://placekitten.com/200/300"),
+            ),
+            RotationTransition(
+              turns: Tween(begin: 0.0, end: 1.0).animate(_rotationController!),
+              child: Image.network("https://placekitten.com/200/300"),
+            ),
+            FloatingActionButton(
+              onPressed: toggleImageRotation,
+              child: Icon(_rotationController!.isAnimating
+                  ? Icons.stop
+                  : Icons.rotate_right),
+            ),
+          ],
+        ),
       ),
     );
   }
