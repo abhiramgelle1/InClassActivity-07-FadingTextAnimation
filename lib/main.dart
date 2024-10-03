@@ -18,11 +18,28 @@ class MultiFeatureApp extends StatefulWidget {
   _MultiFeatureAppState createState() => _MultiFeatureAppState();
 }
 
-class _MultiFeatureAppState extends State<MultiFeatureApp> {
+class _MultiFeatureAppState extends State<MultiFeatureApp>
+    with SingleTickerProviderStateMixin {
   double _duration = 1.0; // Duration in seconds
   Curve _curve = Curves.easeIn;
   bool _isImageRounded = false;
   bool _isImageFaded = true;
+  AnimationController? _rotationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _rotationController = AnimationController(
+      duration: const Duration(seconds: 20),
+      vsync: this,
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _rotationController?.dispose();
+    super.dispose();
+  }
 
   void _updateDuration(double newDuration) {
     setState(() {
@@ -34,6 +51,14 @@ class _MultiFeatureAppState extends State<MultiFeatureApp> {
     setState(() {
       _curve = newCurve;
     });
+  }
+
+  void toggleImageRotation() {
+    if (_rotationController!.isAnimating) {
+      _rotationController!.stop();
+    } else {
+      _rotationController!.repeat();
+    }
   }
 
   @override
@@ -113,6 +138,16 @@ class _MultiFeatureAppState extends State<MultiFeatureApp> {
             opacity: _isImageFaded ? 1.0 : 0.0,
             duration: Duration(seconds: 2),
             child: Image.network("https://placekitten.com/200/300"),
+          ),
+          RotationTransition(
+            turns: Tween(begin: 0.0, end: 1.0).animate(_rotationController!),
+            child: Image.network("https://placekitten.com/200/300"),
+          ),
+          FloatingActionButton(
+            onPressed: toggleImageRotation,
+            child: Icon(_rotationController!.isAnimating
+                ? Icons.stop
+                : Icons.rotate_right),
           ),
         ],
       ),
