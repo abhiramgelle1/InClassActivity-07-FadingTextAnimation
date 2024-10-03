@@ -66,7 +66,7 @@ class _MultiFeatureAppState extends State<MultiFeatureApp>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Multiple Animation Features'),
+        title: Text('Animation Demo'),
       ),
       body: SingleChildScrollView(
         child: Column(
